@@ -79,7 +79,7 @@ def run_crawler(args):
         drop_path_rate=args.drop_path,
         )
     #net.load_state_dict(torch.load(args.ckpt)['model'])
-    utils.load_state_dict(net, torch.load(args.ckpt), prefix='')
+    utils.load_state_dict(net, torch.load(args.ckpt, map_location='cpu'), prefix='')
     net = net.to(device)
     net.eval()
 
