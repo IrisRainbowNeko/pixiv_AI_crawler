@@ -5,6 +5,10 @@
 涩图识别分类部分使用 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git) 作为backbone的分类模型实现，
 性能优于Trasnformer类模型。
 
+## 自动筛选效果
+
+<img src="imgs/c1.jpg" >
+
 ## 环境配置
 环境配置参考 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git)
 
