@@ -13,6 +13,7 @@ from timm.data import Mixup
 from timm.utils import accuracy, ModelEma
 
 import utils
+from sklearn.metrics import confusion_matrix
 
 def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
@@ -143,6 +144,8 @@ def evaluate(data_loader, model, device, use_amp=False):
 
     # switch to evaluation mode
     model.eval()
+    label_list = []
+    pred_list = []
     for batch in metric_logger.log_every(data_loader, 10, header):
         images = batch[0]
         target = batch[-1]
@@ -165,9 +168,12 @@ def evaluate(data_loader, model, device, use_amp=False):
         metric_logger.update(loss=loss.item())
         metric_logger.meters['acc1'].update(acc1.item(), n=batch_size)
         metric_logger.meters['acc5'].update(acc5.item(), n=batch_size)
+        metric_logger.meters['cm'].update_raw(output.argmax(dim=-1).cpu().numpy().astype(int).tolist(),
+                                              target.cpu().numpy().astype(int).tolist())
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print('* Acc@1 {top1.global_avg:.3f} Acc@5 {top5.global_avg:.3f} loss {losses.global_avg:.3f}'
           .format(top1=metric_logger.acc1, top5=metric_logger.acc5, losses=metric_logger.loss))
+    print(metric_logger.cm.cm)
 
     return {k: meter.global_avg for k, meter in metric_logger.meters.items()}

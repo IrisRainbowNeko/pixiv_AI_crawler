@@ -8,6 +8,10 @@
 
 import os
 from torchvision import datasets, transforms
+import cv2
+import json
+from pathlib import Path
+import torch.utils.data as data
 
 from timm.data.constants import \
     IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
@@ -40,12 +44,16 @@ def build_dataset(is_train, args):
         dataset = datasets.ImageFolder(root, transform=transform)
         nb_classes = args.nb_classes
         assert len(dataset.class_to_idx) == nb_classes
+    elif args.data_set == "json":
+        root = args.data_path if is_train else args.eval_data_path
+        imset = os.path.join(args.imset, 'train.json' if is_train else 'test.json')
+        nb_classes = args.nb_classes
+        dataset = JsonDataset(imset, root, transform=transform)
     else:
         raise NotImplementedError()
     print("Number of the class = %d" % nb_classes)
 
     return dataset, nb_classes
-
 
 def build_transform(is_train, args):
     resize_im = args.input_size > 32
@@ -58,6 +66,7 @@ def build_transform(is_train, args):
         transform = create_transform(
             input_size=args.input_size,
             is_training=True,
+            scale=(0.8, 1.0),
             color_jitter=args.color_jitter,
             auto_augment=args.aa,
             interpolation=args.train_interpolation,
@@ -94,3 +103,29 @@ def build_transform(is_train, args):
     t.append(transforms.ToTensor())
     t.append(transforms.Normalize(mean, std))
     return transforms.Compose(t)
+
+class JsonDataset(data.Dataset):
+    def __init__(self, imset, root, transform=None):
+        self.transform=transform
+
+        root = Path(root)
+
+        with open(imset, 'r', encoding='utf8') as f:
+            data = json.load(f)
+            self.data_list=[(str(root/k), v) for k,v in data.items()]
+
+    def __getitem__(self, idx):
+        img_path, label = self.data_list[idx]
+        #img = Image.open(img_path).convert('RGB')
+        img = transforms.ToPILImage()(cv2.imread(img_path))
+
+        if self.transform is not None:
+            img = self.transform(img)
+
+        return img, label
+
+    def __len__(self):
+        return len(self.data_list)
+
+    def get_classes_for_all_imgs(self):
+        return [x[1] for x in self.data_list]

@@ -32,6 +32,9 @@ import utils
 import models.convnext
 import models.convnext_isotropic
 
+import warnings
+warnings.filterwarnings("ignore")
+
 def str2bool(v):
     """
     Converts string to bool type; enables command line 
@@ -148,10 +151,12 @@ def get_args_parser():
                         help='dataset path')
     parser.add_argument('--eval_data_path', default=None, type=str,
                         help='dataset path for evaluation')
+    parser.add_argument('--imset', default='', type=str,
+                        help='imset path')
     parser.add_argument('--nb_classes', default=1000, type=int,
                         help='number of the classification types')
     parser.add_argument('--imagenet_default_mean_and_std', type=str2bool, default=True)
-    parser.add_argument('--data_set', default='IMNET', choices=['CIFAR', 'IMNET', 'image_folder'],
+    parser.add_argument('--data_set', default='IMNET', choices=['CIFAR', 'IMNET', 'image_folder', 'json'],
                         type=str, help='ImageNet dataset path')
     parser.add_argument('--output_dir', default='',
                         help='path where to save, empty for no saving')
@@ -222,9 +227,14 @@ def main(args):
     num_tasks = utils.get_world_size()
     global_rank = utils.get_rank()
 
-    sampler_train = torch.utils.data.DistributedSampler(
-        dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True, seed=args.seed,
-    )
+    #sampler_train = torch.utils.data.DistributedSampler(dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True, seed=args.seed,)
+    class_sample_counts = [7316 - 20, 836 - 20, 147 - 20]
+    weights = 1. / torch.tensor(class_sample_counts, dtype=torch.float)
+    train_targets = dataset_train.get_classes_for_all_imgs()
+    samples_weights = weights[train_targets]
+
+    sampler_train = utils.WeightedRandomSamplerDDP(dataset_train, weights=samples_weights, num_replicas=num_tasks, rank=global_rank,
+                                                   num_samples=len(samples_weights), replacement=True)
     print("Sampler_train = %s" % str(sampler_train))
     if args.dist_eval:
         if len(dataset_val) % num_tasks != 0:
@@ -334,7 +344,7 @@ def main(args):
 
     if args.layer_decay < 1.0 or args.layer_decay > 1.0:
         num_layers = 12 # convnext layers divided into 12 parts, each with a different decayed lr value.
-        assert args.model in ['convnext_small', 'convnext_base', 'convnext_large', 'convnext_xlarge'], \
+        assert args.model in ['convnext_small', 'convnext_small_384', 'convnext_base', 'convnext_large', 'convnext_xlarge'], \
              "Layer Decay impl only supports convnext_small/base/large/xlarge"
         assigner = LayerDecayValueAssigner(list(args.layer_decay ** (num_layers + 1 - i) for i in range(num_layers + 2)))
     else:
@@ -469,6 +479,7 @@ def main(args):
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print('Training time {}'.format(total_time_str))
 
+#python main.py --model convnext_tiny --eval true --resume ckpt/checkpoint-best_tiny.pth --input_size 384 --drop_path 0.6 --data_path ../anime_filter/pixiv_crawler/images --imset ../anime_filter/imset/ --data_set json --eval_data_path ../anime_filter/pixiv_crawler/images
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('ConvNeXt training and evaluation script', parents=[get_args_parser()])
     args = parser.parse_args()

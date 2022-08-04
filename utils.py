@@ -21,6 +21,7 @@ import torch.distributed as dist
 from torch._six import inf
 
 from tensorboardX import SummaryWriter
+from sklearn.metrics import confusion_matrix
 
 class SmoothedValue(object):
     """Track a series of values and provide access to smoothed values over a
@@ -31,6 +32,7 @@ class SmoothedValue(object):
         if fmt is None:
             fmt = "{median:.4f} ({global_avg:.4f})"
         self.deque = deque(maxlen=window_size)
+        self.deque_cm = deque(maxlen=2000)
         self.total = 0.0
         self.count = 0
         self.fmt = fmt
@@ -39,6 +41,11 @@ class SmoothedValue(object):
         self.deque.append(value)
         self.count += n
         self.total += value * n
+
+    def update_raw(self, pred, target):
+        self.count = 1
+        self.total = 1
+        self.deque_cm.extend(list(zip(pred, target)))
 
     def synchronize_between_processes(self):
         """
@@ -75,13 +82,18 @@ class SmoothedValue(object):
     def value(self):
         return self.deque[-1]
 
+    @property
+    def cm(self):
+        data = list(zip(*list(self.deque_cm)))
+        return confusion_matrix(data[1], data[0])
+
     def __str__(self):
         return self.fmt.format(
             median=self.median,
             avg=self.avg,
             global_avg=self.global_avg,
             max=self.max,
-            value=self.value)
+            value=self.value) if len(self.deque_cm)==0 else 'cm'
 
 
 class MetricLogger(object):
@@ -505,3 +517,52 @@ def auto_load_model(args, model, model_without_ddp, optimizer, loss_scaler, mode
             if 'scaler' in checkpoint:
                 loss_scaler.load_state_dict(checkpoint['scaler'])
             print("With optim & sched!")
+
+class WeightedRandomSamplerDDP(torch.utils.data.DistributedSampler):
+    r"""Samples elements from ``[0,..,len(weights)-1]`` with given probabilities (weights).
+
+    Args:
+        data_set: Dataset used for sampling.
+        weights (sequence)   : a sequence of weights, not necessary summing up to one
+        num_replicas (int, optional): Number of processes participating in
+            distributed training. By default, :attr:`world_size` is retrieved from the
+            current distributed group.
+        rank (int, optional): Rank of the current process within :attr:`num_replicas`.
+            By default, :attr:`rank` is retrieved from the current distributed
+            group.
+        num_samples (int): number of samples to draw
+        replacement (bool): if ``True``, samples are drawn with replacement.
+            If not, they are drawn without replacement, which means that when a
+            sample index is drawn for a row, it cannot be drawn again for that row.
+        generator (Generator): Generator used in sampling.
+    """
+    weights: torch.Tensor
+    num_samples: int
+    replacement: bool
+
+    def __init__(self, data_set, weights, num_replicas: int, rank: int, num_samples: int,
+                 replacement: bool = True, generator=None) -> None:
+        super(WeightedRandomSamplerDDP, self).__init__(data_set, num_replicas, rank)
+        if not isinstance(num_samples, int) or isinstance(num_samples, bool) or \
+                num_samples <= 0:
+            raise ValueError("num_samples should be a positive integer "
+                             "value, but got num_samples={}".format(num_samples))
+        if not isinstance(replacement, bool):
+            raise ValueError("replacement should be a boolean value, but got "
+                             "replacement={}".format(replacement))
+        self.weights = torch.as_tensor(weights, dtype=torch.double)
+        self.num_samples = num_samples
+        self.replacement = replacement
+        self.generator = generator
+        self.num_replicas = num_replicas
+        self.rank = rank
+        self.weights = self.weights[self.rank::self.num_replicas]
+        self.num_samples = self.num_samples // self.num_replicas
+
+    def __iter__(self):
+        rand_tensor = torch.multinomial(self.weights, self.num_samples, self.replacement, generator=self.generator)
+        rand_tensor =  self.rank + rand_tensor * self.num_replicas
+        return iter(rand_tensor.tolist())
+
+    def __len__(self):
+        return self.num_samples
