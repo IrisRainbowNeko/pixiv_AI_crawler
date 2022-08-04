@@ -4,7 +4,7 @@ import datetime
 # NOTE: MODE_CONFIG only applies to ranking crawler
 MODE_CONFIG = {
     # start date
-    "START_DATE": datetime.date(2022, 7, 20),
+    "START_DATE": datetime.date(2022, 7, 30),
     # date range: [start, start + domain - 1]
     "RANGE": 1,
 
@@ -56,7 +56,7 @@ USER_CONFIG = {
 DOWNLOAD_CONFIG = {
     # image save path
     #   NOTE: DO NOT miss "/"
-    "STORE_PATH": "images_gl84/",
+    "STORE_PATH": "images_730/",
 
     # abort request / download
     #   after 10 unsuccessful attempts

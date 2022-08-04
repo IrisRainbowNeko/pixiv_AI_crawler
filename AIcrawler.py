@@ -51,7 +51,7 @@ def get_args_parser():
 
     # Evaluation parameters
     parser.add_argument('--crop_pct', type=float, default=None)
-    parser.add_argument('--pos_thr', type=list, default=[0, 0, 0])
+    parser.add_argument('--pos_thr', type=list, default=[2.0, 0.55, 0.2])
 
     # Dataset parameters
     parser.add_argument('--nb_classes', default=1000, type=int,
