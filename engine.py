@@ -162,18 +162,18 @@ def evaluate(data_loader, model, device, use_amp=False):
             output = model(images)
             loss = criterion(output, target)
 
-        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        acc1, acc3 = accuracy(output, target, topk=(1, 3))
 
         batch_size = images.shape[0]
         metric_logger.update(loss=loss.item())
         metric_logger.meters['acc1'].update(acc1.item(), n=batch_size)
-        metric_logger.meters['acc5'].update(acc5.item(), n=batch_size)
+        metric_logger.meters['acc3'].update(acc3.item(), n=batch_size)
         metric_logger.meters['cm'].update_raw(output.argmax(dim=-1).cpu().numpy().astype(int).tolist(),
                                               target.cpu().numpy().astype(int).tolist())
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
-    print('* Acc@1 {top1.global_avg:.3f} Acc@5 {top5.global_avg:.3f} loss {losses.global_avg:.3f}'
-          .format(top1=metric_logger.acc1, top5=metric_logger.acc5, losses=metric_logger.loss))
+    print('* Acc@1 {top1.global_avg:.3f} Acc@3 {top5.global_avg:.3f} loss {losses.global_avg:.3f}'
+          .format(top1=metric_logger.acc1, top5=metric_logger.acc3, losses=metric_logger.loss))
     print(metric_logger.cm.cm)
 
     return {k: meter.global_avg for k, meter in metric_logger.meters.items()}

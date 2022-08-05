@@ -228,7 +228,7 @@ def main(args):
     global_rank = utils.get_rank()
 
     #sampler_train = torch.utils.data.DistributedSampler(dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True, seed=args.seed,)
-    class_sample_counts = [7316 - 20, 836 - 20, 147 - 20]
+    class_sample_counts = [13154 - 50, 1084 - 50, 1106 - 50]
     weights = 1. / torch.tensor(class_sample_counts, dtype=torch.float)
     train_targets = dataset_train.get_classes_for_all_imgs()
     samples_weights = weights[train_targets]

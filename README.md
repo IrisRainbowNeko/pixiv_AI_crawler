@@ -17,7 +17,7 @@
 ## 使用方法
 下载预训练权重放在```ckpt/```文件夹内:
 
-[下载权重](https://pan.baidu.com/s/1pAiR6YrQ9uZxmUc1JZ6R7A) 提取码：o4ps
+[下载权重-百度网盘](https://pan.baidu.com/s/1iuZktVIPGF0DONdQeGfjSw) 提取码：mmwi 或 [下载权重](https://github.com/7eu7d7/pixiv_AI_crawler/releases/download/v2/checkpoint-best_t5.pth)
 
 根据 [PixivCrawler](https://github.com/CWHer/PixivCrawler.git) 的说明配置爬虫，设置账号和cookie，设置要爬的内容
 

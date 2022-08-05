@@ -54,11 +54,11 @@ def get_args_parser():
     parser.add_argument('--pos_thr', type=list, default=[2.0, 0.55, 0.2])
 
     # Dataset parameters
-    parser.add_argument('--nb_classes', default=1000, type=int,
+    parser.add_argument('--nb_classes', default=3, type=int,
                         help='number of the classification types')
     parser.add_argument('--imagenet_default_mean_and_std', type=str2bool, default=True)
 
-    parser.add_argument('--ckpt', default='ckpt/checkpoint-best_t4.pth', help='resume from checkpoint')
+    parser.add_argument('--ckpt', default='ckpt/checkpoint-best_t5.pth', help='resume from checkpoint')
 
     # Crawlers
     parser.add_argument('--capacity', default=1024*8, type=int, help='crawler capacity')

@@ -109,6 +109,7 @@ class JsonDataset(data.Dataset):
         self.transform=transform
 
         root = Path(root)
+        self.to_pil = transforms.ToPILImage()
 
         with open(imset, 'r', encoding='utf8') as f:
             data = json.load(f)
@@ -117,7 +118,7 @@ class JsonDataset(data.Dataset):
     def __getitem__(self, idx):
         img_path, label = self.data_list[idx]
         #img = Image.open(img_path).convert('RGB')
-        img = transforms.ToPILImage()(cv2.imread(img_path))
+        img = self.to_pil(cv2.imread(img_path))
 
         if self.transform is not None:
             img = self.transform(img)
