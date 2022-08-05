@@ -12,7 +12,7 @@
 ## 环境配置
 环境配置参考 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git)
 
-需要 **pytorch==1.8**
+需要 **pytorch==1.8 timm==0.3.2**
 
 ## 使用方法
 下载预训练权重放在```ckpt/```文件夹内:
