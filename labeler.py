@@ -5,7 +5,7 @@ import json
 from tqdm import tqdm
 from copy import deepcopy
 
-classes={'0':'other', '1':'xp', '2':'gl'}
+#classes={'0':'other', '1':'xp', '2':'gl'}
 
 def get_imgs(root):
     return [os.path.join(root, x) for x in os.listdir(root) if x.lower().endswith('.jpg') or x.lower().endswith('.png')]
@@ -62,10 +62,10 @@ def make_label(imgs, save_path, skip=True):
     return label_dict
 
 if __name__ == '__main__':
-    root='pixiv_crawler/images'
+    root='pixiv_crawler/images' #图像路径
 
     imgs=get_imgs(root)
-    label_dict=make_label(imgs, 'anime_train.json')
+    label_dict=make_label(imgs, 'dataset.json')
     #cv2.imshow('a', np.zeros((2,2)))
     #key = cv2.waitKey()
     #print(key)

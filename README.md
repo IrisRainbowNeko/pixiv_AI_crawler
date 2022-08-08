@@ -19,19 +19,27 @@
 
 [下载权重-百度网盘](https://pan.baidu.com/s/1iuZktVIPGF0DONdQeGfjSw) 提取码：mmwi 或 [下载权重](https://github.com/7eu7d7/pixiv_AI_crawler/releases/download/v2/checkpoint-best_t5.pth)
 
-根据 [PixivCrawler](https://github.com/CWHer/PixivCrawler.git) 的说明配置爬虫，设置账号和cookie，设置要爬的内容
+根据 [PixivCrawler](https://github.com/CWHer/PixivCrawler.git) 的说明配置爬虫，设置账号和cookie，设置要爬的内容。
+
+```pixiv_crawler/config.py```中配置爬虫基本参数。
 
 运行命令启动AI爬虫:
 ```bash
+# 不加关键字默认爬日榜
 python AIcrawler.py --ckpt 模型权重 --n_images 总图像个数 [--keyword 关键字] 
 ```
 
 ## 按自己的xp训练模型
-用```labeler.py```打标签，需要至少5000张图。
+
+### 数据处理
+准备至少5000张图。
+用```labeler.py```打标签，数据集标签会储存为json格式。
+
+用```data_proc.py```划分训练集和测试集，并对图像进行预处理。
 
 修改参数，运行脚本训练:
 ```bash
 python train.sh
 ```
 
-其他训练设置参考 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git)
+训练参数设置参考 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git)
