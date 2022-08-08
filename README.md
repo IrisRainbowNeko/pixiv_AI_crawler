@@ -14,6 +14,24 @@
 
 需要 **pytorch==1.8 timm==0.3.2**
 
+下载miniconda，创建新python环境并激活
+```bash
+conda create -n pixivai python=3.9
+conda activate pixivai
+```
+
+安装pytorch
+```bash
+conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch-lts -c conda-forge
+# 没有N卡的用这个
+conda install pytorch torchvision torchaudio cpuonly -c pytorch-lts
+```
+
+安装其他依赖
+```bash
+pip install -r requirements.txt
+```
+
 ## 使用方法
 下载预训练权重放在```ckpt/```文件夹内:
 
