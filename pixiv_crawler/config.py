@@ -34,7 +34,7 @@ NETWORK_CONFIG = {
     # proxy setting
     #   you should customize your proxy setting accordingly
     #   default is for clash
-    "PROXY": {"https": "127.0.0.1:1080"},
+    "PROXY": {"https": "http://127.0.0.1:1080"},
 
     # common request header
     "HEADER": {
