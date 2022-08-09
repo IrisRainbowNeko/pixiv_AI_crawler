@@ -12,28 +12,30 @@
 ## 环境配置
 环境配置参考 [ConvNeXt](https://github.com/facebookresearch/ConvNeXt.git)
 
-需要 **pytorch==1.8 timm==0.3.2**
+需要**pytorch==1.8 timm==0.3.2**
 
-下载miniconda，创建新python环境并激活
+### 安装pytorch(windows)
 ```bash
-conda create -n pixivai python=3.9
-conda activate pixivai
-```
-
-安装pytorch
-```bash
-conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch-lts -c conda-forge
+#有N卡的用这个(CUDA10.2)
+pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio===0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu102
 # 没有N卡的用这个
-conda install pytorch torchvision torchaudio cpuonly -c pytorch-lts
+pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio===0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu
+```
+### 安装pytorch(linux)
+```bash
+#有N卡的用这个(CUDA10.2)
+pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu102
+#没有N卡的用这个
+pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu
 ```
 
-安装其他依赖
+### 安装其他依赖
 ```bash
 pip install -r requirements.txt
 ```
 
 ## 使用方法
-下载预训练权重放在```ckpt/```文件夹内:
+下载预训练权重放在```/ckpt```文件夹内:
 
 [下载权重-百度网盘](https://pan.baidu.com/s/1iuZktVIPGF0DONdQeGfjSw) 提取码：mmwi 或 [下载权重](https://github.com/7eu7d7/pixiv_AI_crawler/releases/download/v2/checkpoint-best_t5.pth)
 
@@ -44,7 +46,7 @@ pip install -r requirements.txt
 运行命令启动AI爬虫:
 ```bash
 # 不加关键字默认爬日榜
-python AIcrawler.py --ckpt 模型权重 --n_images 总图像个数 [--keyword 关键字] 
+python AIcrawler.py --ckpt {模型权重} --n_images {总图像个数} --keyword {关键字} 
 ```
 
 ## 按自己的xp训练模型
