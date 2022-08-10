@@ -19,10 +19,11 @@ def check_dir(path):
 with open(set_raw, 'r', encoding='utf8') as f:
     data = json.load(f)
 
-print('images count:', Counter(list(data.values())))
+cls_list=list(Counter(list(data.values())))
+print('images count:', cls_list)
 
-data_group=[[] for _ in range(3)]
-data_group_test=[[] for _ in range(3)]
+data_group=[[] for _ in range(len(cls_list))]
+data_group_test=[[] for _ in range(len(cls_list))]
 for k,v in tqdm(data.items()):
     img=cv2.imread(img_root+k)
     if img is None:
