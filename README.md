@@ -53,6 +53,19 @@ python AIcrawler.py --ckpt 模型权重 --n_images 总图像个数 [--keyword �
 准备至少5000张图。
 用```labeler.py```打标签，数据集标签会储存为json格式。
 
+**或**
+
+把不同类别放入不同文件夹，用```labeler_folder.py```一键打标签。
+
+```
+images
+|--0
+|  |--1.png
+|  |--2.png
+|
+|--1
+```
+
 用```data_proc.py```划分训练集和测试集，并对图像进行预处理。
 
 修改参数，运行脚本训练:
