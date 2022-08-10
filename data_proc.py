@@ -4,6 +4,7 @@ import os
 import cv2
 from tqdm import tqdm
 from labeler import img_resize
+from collections import Counter
 
 n_test=50 # 测试集图像数量(每个类别)
 set_raw='imset/cat_7.json' # 标签路径
@@ -17,6 +18,8 @@ def check_dir(path):
 
 with open(set_raw, 'r', encoding='utf8') as f:
     data = json.load(f)
+
+print('images count:', Counter(list(data.values())))
 
 data_group=[[] for _ in range(3)]
 data_group_test=[[] for _ in range(3)]
