@@ -7,8 +7,9 @@ from copy import deepcopy
 
 #classes={'0':'other', '1':'xp', '2':'gl'}
 
+img_exts=['jpg', 'png', 'jpeg', 'bmp', 'tif']
 def get_imgs(root):
-    return [os.path.join(root, x) for x in os.listdir(root) if x.lower().endswith('.jpg') or x.lower().endswith('.png')]
+    return [os.path.join(root, x) for x in os.listdir(root) if x[x.rfind('.')+1:].lower() in img_exts]
 
 def img_resize(image, width_new = 1280, height_new = 720):
     height, width = image.shape[0], image.shape[1]

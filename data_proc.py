@@ -11,6 +11,10 @@ img_root='pixiv_crawler/images/' # 原始图像路径
 save_path='imset' # 划分后标签储存路径
 img_save_path='imgs/' # 处理后图像储存路径
 
+def check_dir(path):
+    dp=os.path.dirname(path)
+    os.makedirs(dp, exist_ok=True)
+
 with open(set_raw, 'r', encoding='utf8') as f:
     data = json.load(f)
 
@@ -22,7 +26,9 @@ for k,v in tqdm(data.items()):
         continue
     if 0.4<=img.shape[0]/img.shape[1]<=2.5:
         data_group[v].append(k)
-        cv2.imwrite(os.path.join(img_save_path,k), img_resize(img, width_new=448, height_new=448))
+        imp=os.path.join(img_save_path,k)
+        check_dir(imp)
+        cv2.imwrite(imp, img_resize(img, width_new=448, height_new=448))
     else:
         print('Inappropriate shape:', img.shape[0]/img.shape[1])
 
