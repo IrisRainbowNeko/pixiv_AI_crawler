@@ -28,6 +28,7 @@ def make_label(imgs, save_path, skip=True):
         label_dict_raw=deepcopy(label_dict)
         skiped=set()
     else:
+        skip=False
         label_dict={}
 
     ptr=-1
