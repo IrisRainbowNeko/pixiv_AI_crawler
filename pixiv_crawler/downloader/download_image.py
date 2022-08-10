@@ -93,6 +93,8 @@ def downloadImageWithCLS(url: Tuple[str, str], im_classifier):
     """
 
     buffer_small = downloadImage(url[0], False)
+    if buffer_small==0:
+        return 0
     image = np.frombuffer(buffer_small, dtype=np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
