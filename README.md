@@ -1,4 +1,5 @@
 # 人工智能pixiv高质量涩图爬虫
+<a href="https://colab.research.google.com/drive/1jwZehdQ4V5rR2M8n1wAJ7P8QHstMAjOl?usp=sharing" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 # 能学会你xp的AI涩图爬虫
 
 爬虫部分基于 [PixivCrawler](https://github.com/CWHer/PixivCrawler.git) 修改实现，
