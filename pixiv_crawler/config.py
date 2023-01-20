@@ -5,7 +5,7 @@ import datetime
 MODE_CONFIG = {
     # start date
     "START_DATE": datetime.date(2022, 8, 5),
-    # date range: [start, start + domain - 1]
+    # date range: [start, start + range - 1]
     "RANGE": 1,
 
     # which ranking list

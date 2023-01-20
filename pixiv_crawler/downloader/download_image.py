@@ -55,7 +55,7 @@ def downloadImage(url: str, save: bool=True, sub_folder:str=None):
             if response.status_code == 200:
                 image_size = int(
                     response.headers["content-length"])
-                # deletc incomplete image
+                # detect incomplete image
                 if len(response.content) != image_size:
                     time.sleep(DOWNLOAD_CONFIG["FAIL_DELAY"])
                     wait_time += 2

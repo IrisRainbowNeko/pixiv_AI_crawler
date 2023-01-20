@@ -13,6 +13,7 @@ def collect(args: Tuple[str, Callable, Optional[Dict]]) \
     generic metadata collector, collect metadata from templates
         e.g.: user.json, page.json, ...
         use different selector to select different elements
+        args: url, selector, additional_headers
     """
     url, selector, additional_headers = args
     headers = NETWORK_CONFIG["HEADER"]

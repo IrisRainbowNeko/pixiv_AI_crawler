@@ -44,20 +44,20 @@ class RankingCrawler():
         ARTWORK_PER = 50
         n_page = (MODE_CONFIG["N_ARTWORK"] - 1) // ARTWORK_PER + 1  # ceil
 
-        def addData(current: datetime.date, days):
+        def addDate(current: datetime.date, days):
             return current + datetime.timedelta(days)
 
         printInfo(f"===== start collecting {self.mode}:{self.content} ranking =====")
         printInfo("from {} to {}".format(
             self.date.strftime("%Y-%m-%d"),
-            addData(self.date, self.range - 1).strftime("%Y-%m-%d")))
+            addDate(self.date, self.range - 1).strftime("%Y-%m-%d")))
 
         urls: Set[str] = set()
         for _ in range(self.range):
             for i in range(n_page):
                 urls.add(self.url.format(
                     self.date.strftime("%Y%m%d"), i + 1))
-            self.date = addData(self.date, 1)
+            self.date = addDate(self.date, 1)
 
         n_thread = DOWNLOAD_CONFIG["N_THREAD"]
         with futures.ThreadPoolExecutor(n_thread) as executor:
