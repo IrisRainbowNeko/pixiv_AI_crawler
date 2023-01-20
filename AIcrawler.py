@@ -102,7 +102,7 @@ def run_crawler(args):
         config.MODE_CONFIG['N_ARTWORK']=args.n_images
         crawler=RankingCrawler(capacity=args.capacity, im_classifier=im_classifier)
     else:
-        crawler=KeywordCrawler(keyword=args.keyword, n_images=args.n_images, capacity=args.capacity, im_classifier=im_classifier)
+        crawler=KeywordCrawler(keyword=args.keyword, mode="all", n_images=args.n_images, capacity=args.capacity, im_classifier=im_classifier)
 
     crawler.run()
 

@@ -15,8 +15,11 @@ class KeywordCrawler():
     download search results of a keyword (sorted by popularity)
     """
 
-    def __init__(self, keyword: str, n_images=200, capacity=1024, im_classifier=None):
+    def __init__(self, keyword: str, mode: str = "safe", n_images=200, capacity=1024, im_classifier=None):
+        assert mode in ["safe", "r18", "all"]
+
         self.keyword = keyword
+        self.mode = mode
         self.n_images = n_images
 
         self.downloader = Downloader(capacity, im_classifier)
@@ -36,7 +39,8 @@ class KeywordCrawler():
 
         urls: Set[str] = set()
         url = "https://www.pixiv.net/ajax/search/artworks/{}?" + \
-            "word={}&order=popular_d&mode=all&p={}&s_mode=s_tag_full&type=all&lang=zh"
+              "word={}&order=popular_d" + f"&mode={self.mode}" + \
+              "&p={}&s_mode=s_tag_full&type=all&lang=zh"
         for i in range(n_page):
             urls.add(url.format(self.keyword, self.keyword, i + 1))
 
