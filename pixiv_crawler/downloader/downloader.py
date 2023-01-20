@@ -31,7 +31,7 @@ class Downloader():
         with futures.ThreadPoolExecutor(n_thread) as executor:
             with tqdm(total=len(self.url_group), desc="downloading") as pbar:
                 if self.im_classifier is None:
-                    exmap=executor.map(downloadImage, self.url_group)
+                    exmap=executor.map(downloadImage, [urls[1] for urls in self.url_group])
                 else:
                     exmap=executor.map(downloadImageWithCLS, self.url_group, [self.im_classifier]*len(self.url_group))
                 for image_size in exmap:
