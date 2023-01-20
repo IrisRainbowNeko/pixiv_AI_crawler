@@ -17,7 +17,12 @@ MODE_CONFIG = {
     ],
     "MODE": "daily",  # choose from the above
 
-    "EXP_TAGS": ['漫画'],  # choose from the above
+    # illustration, manga, or both
+    "CONTENT_MODES": [
+        "all",  # download both illustrations & mangas
+        "illust", "manga"
+    ],
+    "CONTENT_MODE": "illust",  # choose from the above
 
     # download top x in each ranking
     #   suggested x be a multiple of 50
