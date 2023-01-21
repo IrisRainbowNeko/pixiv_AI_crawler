@@ -5,7 +5,7 @@ import datetime
 MODE_CONFIG = {
     # start date
     "START_DATE": datetime.date(2022, 8, 5),
-    # date range: [start, start + domain - 1]
+    # date range: [start, start + range - 1]
     "RANGE": 1,
 
     # which ranking list
@@ -17,7 +17,12 @@ MODE_CONFIG = {
     ],
     "MODE": "daily",  # choose from the above
 
-    "EXP_TAGS": ['漫画'],  # choose from the above
+    # illustration, manga, or both
+    "CONTENT_MODES": [
+        "all",  # download both illustrations & mangas
+        "illust", "manga"
+    ],
+    "CONTENT_MODE": "illust",  # choose from the above
 
     # download top x in each ranking
     #   suggested x be a multiple of 50

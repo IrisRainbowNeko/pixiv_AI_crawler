@@ -32,8 +32,9 @@ if __name__ == "__main__":
     # case 4: (need premium & cookie !!!)
     #   download search results of a keyword (sorted by popularity)
     #   1st parameter is keyword
-    #   2nd parameter is max download number
-    #   3rd parameter is flow capacity
-    #app = KeywordCrawler(keyword="百合", n_images=200, capacity=1024*256)
+    #   2nd parameter is mode (support ["safe", "r18", "all"], default is "safe")
+    #   3rd parameter is max download number
+    #   4th parameter is flow capacity
+    # app = KeywordCrawler(keyword="百合", mode=["safe", "r18", "all"][-1], n_images=200, capacity=1024*256)
     app = RankingCrawler(capacity=1024*8)
     app.run()
